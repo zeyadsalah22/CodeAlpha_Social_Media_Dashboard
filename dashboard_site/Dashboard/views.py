@@ -16,7 +16,7 @@ def login_view(request):
             login(request,user)
             return HttpResponseRedirect(reverse('index'))
         else:
-            render(request,'Dashboard/login.html',{
+            return render(request,'Dashboard/login.html',{
                 "message": 'Invalied username and/or password'
             })
     else:
