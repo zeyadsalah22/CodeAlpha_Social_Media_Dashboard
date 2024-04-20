@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User
+from .models import User,SocialMediaAccount
 
 
 def login_view(request):
@@ -17,7 +17,7 @@ def login_view(request):
             return HttpResponseRedirect(reverse('index'))
         else:
             return render(request,'Dashboard/login.html',{
-                "message": 'Invalied username and/or password'
+                "message": 'Invalid username and/or password'
             })
     else:
         return render(request,'Dashboard/login.html')
@@ -51,4 +51,36 @@ def register(request):
         return render(request, "Dashboard/register.html")
     
 def index(request):
-    return render(request,"Dashboard/index.html")
+    if request.user.is_authenticated:
+        accounts = SocialMediaAccount.objects.filter(user=request.user)
+        overview = {'Likes': 100, 'Account Views': 200}
+        return render(request, 'Dashboard/index.html', {
+            'accounts': accounts,
+            'overview': overview
+            })
+    else:
+        return render(request, 'Dashboard/login.html')
+
+
+def connect_account(request):
+    if request.method == 'POST':
+        platform = request.POST['platform']
+        username = request.POST['username']
+        password = request.POST['password']  # Consider using OAuth instead of storing passwords
+
+        # Check if the account already exists
+        account = SocialMediaAccount.objects.filter(user=request.user, platform=platform).first()
+        if account:
+            # If the account exists, update the username and password
+            account.username = username
+            account.password = password
+            account.save()
+        else:
+            # If the account does not exist, create a new one
+            account = SocialMediaAccount(user=request.user, platform=platform, username=username, password=password)
+            account.save()
+
+        return HttpResponseRedirect(reverse('index'))
+    else:
+        # If the request is not a POST, redirect to the index page
+        return HttpResponseRedirect(reverse('index'))

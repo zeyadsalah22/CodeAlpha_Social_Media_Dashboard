@@ -1,42 +1,33 @@
 {% extends 'Dashboard/layout.html' %}
 {% block body %}
-<h1>Welcome!</h1>
-<div class="row px-3">
+<h1>Welcome, {{user.username}}!</h1>
+<div class="container mt-5">
+  <div class="row">
+    <!-- Social Media Cards -->
+    {% for account in accounts %}
     <div class="col-sm-3 mb-3 mb-sm-0">
       <div class="card border-primary text-bg-dark">
         <div class="card-body">
-          <h5 class="card-title">Facebook</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+          <h5 class="card-title">{{account.platform}}</h5>
+          <p class="card-text">Followers: {{account.followers}}</p>
         </div>
       </div>
     </div>
-    <div class="col-sm-3">
-      <div class="card border-info">
+    {% endfor %}
+  </div>
+
+  <!-- Overview Cards -->
+  <div class="row mt-5">
+    {% for metric, value in overview.items %}
+    <div class="col-sm-6">
+      <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Instagram</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+          <h5 class="card-title">Today's {{metric}}</h5>
+          <p class="card-text">{{value}}</p>
         </div>
       </div>
     </div>
-    <div class="col-sm-3">
-        <div class="card border-secondary">
-          <div class="card-body">
-            <h5 class="card-title">TikTok</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-    </div>
-    <div class="col-sm-3">
-        <div class="card border-danger">
-          <div class="card-body">
-            <h5 class="card-title">YouTube</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-    </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

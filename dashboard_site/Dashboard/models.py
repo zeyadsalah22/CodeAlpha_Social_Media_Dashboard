@@ -7,3 +7,16 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"Username: {self.username}"
+    
+class SocialMediaAccount(models.Model):
+    PLATFORM_CHOICES = [
+        ('facebook', 'Facebook'),
+        ('linkedin', 'LinkedIn'),
+        ('instagram', 'Instagram'),
+        ('youtube', 'YouTube'),
+    ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    platform = models.CharField(max_length=10, choices=PLATFORM_CHOICES)
+    username = models.CharField(max_length=255) 
+    password = models.CharField(max_length=255)
+    followers = models.IntegerField(default=0)
